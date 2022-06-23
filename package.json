@@ -1,12 +1,12 @@
 {
-  "name": "vue-scroll-picker",
+  "name": "vue-horizontal-scroll-picker",
   "version": "0.8.2",
-  "description": "Scroll Picker Component for Vue.js.",
+  "description": "Horizontal Scroll Picker Component for Vue.js.",
   "author": "Dooplan",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/ReadySetDice/vue-scroll-picker.git"
+    "url": "git://github.com/ReadySetDice/vue-horizontal-scroll-picker.git"
   },
   "scripts": {
     "prepack": "npm run build",
