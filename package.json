@@ -2,11 +2,11 @@
   "name": "vue-scroll-picker",
   "version": "0.8.2",
   "description": "Scroll Picker Component for Vue.js.",
-  "author": "Changwan Jun",
+  "author": "Dooplan",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/wan2land/vue-scroll-picker.git"
+    "url": "git://github.com/ReadySetDice/vue-scroll-picker.git"
   },
   "scripts": {
     "prepack": "npm run build",
