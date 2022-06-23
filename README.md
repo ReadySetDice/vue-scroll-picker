@@ -23,7 +23,7 @@ This is a personal fork because I required a similar functionality, but horizont
 ## Installation
 
 ```
-npm i vue-scroll-picker@vue2
+npm i vue-horizontal-scroll-picker@vue2
 ```
 
 ## Usage
