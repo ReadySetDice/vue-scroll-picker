@@ -16,6 +16,10 @@ If you are using vue 3, please refer to the [main](https://github.com/wan2land/v
 
 [See Example](http://vue-scroll-picker.dist.be) ([sources](./example))
 
+## Fork
+
+This is a personal fork because I required a similar functionality, but horizontal scrolling instead of vertical.
+
 ## Installation
 
 ```

@@ -87,7 +87,7 @@ export default {
       innerIndex,
       innerValue,
 
-      top: null,
+      left: null,
 
       pivots: [],
       pivotMin: 0,
@@ -101,14 +101,14 @@ export default {
       isMouseDown: false,
       isDragging: false,
 
-      scrollOffsetTop: 0,
+      scrollOffsetLeft: 0,
       scrollMin: 0,
       scrollMax: 0,
     }
   },
   mounted() {
     this.calculatePivots()
-    this.top = this.findScrollByIndex(this.innerIndex)
+    this.left = this.findScrollByIndex(this.innerIndex)
     if (this.innerValue !== this.value) {
       this.$emit('input', this.innerValue)
     }
@@ -180,19 +180,19 @@ export default {
     resize() {
       this.$nextTick(() => {
         this.calculatePivots()
-        this.top = this.findScrollByIndex(this.innerIndex)
+        this.left = this.findScrollByIndex(this.innerIndex)
       })
     },
     calculatePivots() {
-      const rotatorTop = this.$refs.list.getBoundingClientRect().top
-      this.pivots = (this.$refs.items || []).map((item) => getClientCenterY(item) - rotatorTop).sort((a, b) => a - b)
+      const rotatorLeft = this.$refs.list.getBoundingClientRect().left
+      this.pivots = (this.$refs.items || []).map((item) => getClientCenterY(item) - rotatorLeft).sort((a, b) => a - b)
       this.pivotMin = Math.min(...this.pivots)
       this.pivotMax = Math.max(...this.pivots)
 
-      this.scrollOffsetTop = this.$refs.selection.offsetTop + this.$refs.selection.offsetHeight / 2
+      this.scrollOffsetLeft = this.$refs.selection.offsetLeft + this.$refs.selection.offsetHeight / 2
 
-      this.scrollMin = this.scrollOffsetTop - this.pivotMin
-      this.scrollMax = this.scrollOffsetTop - this.pivotMax
+      this.scrollMin = this.scrollOffsetLeft - this.pivotMin
+      this.scrollMax = this.scrollOffsetLeft - this.pivotMax
     },
     sanitizeInternalIndex(index) {
       return Math.min(Math.max(index, this.placeholder ? -1 : 0), this.normalizedOptions.length - 1)
@@ -201,7 +201,7 @@ export default {
       let prevDiff = null
       let pivotIndex = 0
       this.pivots.forEach((pivot, i) => {
-        const diff = pivot + scroll - this.scrollOffsetTop
+        const diff = pivot + scroll - this.scrollOffsetLeft
         if (prevDiff === null || Math.abs(prevDiff) > Math.abs(diff)) {
           pivotIndex = i
           prevDiff = diff
@@ -218,31 +218,31 @@ export default {
         pivotIndex++
       }
       if (index > -1 && pivotIndex in this.pivots) {
-        return this.scrollOffsetTop - this.pivots[pivotIndex]
+        return this.scrollOffsetLeft - this.pivots[pivotIndex]
       }
       if (index >= this.pivots.length) {
-        return this.scrollOffsetTop - this.pivotMax
+        return this.scrollOffsetLeft - this.pivotMax
       }
 
-      return this.scrollOffsetTop - this.pivotMin
+      return this.scrollOffsetLeft - this.pivotMin
     },
     onScroll(e) {
-      if (this.top >= this.scrollMin && e.deltaY < 0) return
-      if (this.top <= this.scrollMax && e.deltaY > 0) return
+      if (this.left >= this.scrollMin && e.deltaX < 0) return
+      if (this.left <= this.scrollMax && e.deltaX > 0) return
       if (this.pivots.length === 1) return
 
       e.preventDefault()
 
-      const nextDirInnerIndex = this.sanitizeInternalIndex(this.innerIndex + (e.deltaY > 0 ? 1 : -1))
-      const deltaMax = e.deltaY > 0
+      const nextDirInnerIndex = this.sanitizeInternalIndex(this.innerIndex + (e.deltaX > 0 ? 1 : -1))
+      const deltaMax = e.deltaX > 0
         ? this.findScrollByIndex(nextDirInnerIndex - 1) - this.findScrollByIndex(nextDirInnerIndex)
         : this.findScrollByIndex(nextDirInnerIndex) - this.findScrollByIndex(nextDirInnerIndex + 1)
 
-      const deltaY = Math.max(Math.min(e.deltaY, deltaMax), deltaMax * -1)
+      const deltaX = Math.max(Math.min(e.deltaX, deltaMax), deltaMax * -1)
 
-      this.top = Math.min(Math.max(this.top - deltaY * this.scrollSensitivity, this.scrollMax), this.scrollMin)
+      this.left = Math.min(Math.max(this.left - deltaX * this.scrollSensitivity, this.scrollMax), this.scrollMin)
 
-      const nextInnerIndex = this.sanitizeInternalIndex(this.findIndexFromScroll(this.top))
+      const nextInnerIndex = this.sanitizeInternalIndex(this.findIndexFromScroll(this.left))
       const nextInnerValue = this.normalizedOptions[nextInnerIndex] && this.normalizedOptions[nextInnerIndex].value || null
 
       this.innerIndex = nextInnerIndex
@@ -253,15 +253,15 @@ export default {
       this.onAfterWheel()
     },
     onAfterWheel: debounce(function () {
-      this.correction(this.findIndexFromScroll(this.top))
+      this.correction(this.findIndexFromScroll(this.left))
     }, 200),
     onStart(event) {
       if (event.cancelable) {
         event.preventDefault()
       }
 
-      const { clientY } = getEventXY(event)
-      this.start = [this.top, clientY]
+      const { clientX } = getEventXY(event)
+      this.start = [this.left, clientX]
       if (!isTouchEvent(event)) {
         this.isMouseDown = true
       }
@@ -274,19 +274,19 @@ export default {
       if (!this.start) {
         return
       }
-      const { clientY } = getEventXY(e)
-      const diff = clientY - this.start[1]
+      const { clientX } = getEventXY(e)
+      const diff = clientX - this.start[1]
       if (Math.abs(diff) > 1.5) {
         this.isDragging = true
       }
-      this.top = this.start[0] + diff * (isTouchEvent(e) ? this.touchSensitivity : this.dragSensitivity)
+      this.left = this.start[0] + diff * (isTouchEvent(e) ? this.touchSensitivity : this.dragSensitivity)
     },
     onEnd(e) {
       if (e.cancelable) {
         e.preventDefault()
       }
       if (this.isDragging) {
-        this.correction(this.findIndexFromScroll(this.top))
+        this.correction(this.findIndexFromScroll(this.left))
       } else if (this.isMouseDown) {
         this.handleClick(e)
       }
@@ -298,7 +298,7 @@ export default {
       if (e.cancelable) {
         e.preventDefault()
       }
-      this.correction(this.findIndexFromScroll(this.top))
+      this.correction(this.findIndexFromScroll(this.left))
       this.start = null
       this.isMouseDown = false
       this.isDragging = false
@@ -307,18 +307,18 @@ export default {
       const touchInfo = getEventXY(e)
       const x = touchInfo.clientX
       const y = touchInfo.clientY
-      const topRect = this.$refs.top.getBoundingClientRect()
-      const bottomRect = this.$refs.bottom.getBoundingClientRect()
-      if (topRect.left <= x && x <= topRect.right && topRect.top <= y && y <= topRect.bottom) {
+      const leftRect = this.$refs.left.getBoundingClientRect()
+      const rightRect = this.$refs.right.getBoundingClientRect()
+      if (leftRect.left <= x && x <= leftRect.right && leftRect.top <= y && y <= leftRect.bottom) {
         this.correction(this.innerIndex - 1)
-      } else if (bottomRect.left <= x && x <= bottomRect.right && bottomRect.top <= y && y <= bottomRect.bottom) {
+      } else if (rightRect.left <= x && x <= rightRect.right && rightRect.left <= y && y <= bottomRect.bottom) {
         this.correction(this.innerIndex + 1)
       }
     },
     correction(index) {
       const nextInnerIndex = this.sanitizeInternalIndex(index)
       const nextInnerValue = this.normalizedOptions[nextInnerIndex] && this.normalizedOptions[nextInnerIndex].value || null
-      this.top = this.findScrollByIndex(nextInnerIndex)
+      this.left = this.findScrollByIndex(nextInnerIndex)
 
       this.transitioning = true
       if (this.transitionTO) {
@@ -386,13 +386,13 @@ export default {
             "vue-scroll-picker-list-rotator": true,
             "-transition": this.transitioning,
           },
-          style: this.top !== null ? { top: `${this.top}px` } : {},
+          style: this.left !== null ? { left: `${this.left}px` } : {},
         }, items)
       ]),
       h("div", {class: ["vue-scroll-picker-layer"]}, [
-        h("div", {class: ["top"], ref: "top"}),
+        h("div", {class: ["left"], ref: "left"}),
         h("div", {class: ["middle"], ref: "selection"}),
-        h("div", {class: ["bottom"], ref: "bottom"}),
+        h("div", {class: ["right"], ref: "right"}),
       ]),
     ])
   }

@@ -6,6 +6,8 @@
   overflow: hidden;
 }
 .vue-scroll-picker-list {
+  display: flex;
+  flex-direction: row;
   position: absolute;
   left:0;
   right:0;
@@ -14,16 +16,16 @@
 }
 .vue-scroll-picker-list-rotator {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(50% - .6em);
+  top: 0;
+  bottom: 0;
+  left: calc(50% - .6em);
   &.-transition {
-    transition: top ease 200ms;
+    transition: left ease 200ms;
   }
 }
 .vue-scroll-picker-item {
   text-align: center;
-  height: 1.2em;
+  width: 1.2em;
   line-height: 1.2em;
   &.-placeholder {
     color: #aaa;
@@ -36,34 +38,34 @@
   right: 0;
   top: 0;
   bottom: 0;
-  .top,
+  .left,
   .middle,
-  .bottom {
+  .right {
     position: absolute;
   }
-  .top {
+  .left {
     box-sizing: border-box;
-    border-bottom: 1px solid #c8c7cc;
-    background: linear-gradient(180deg,#fff 10%,rgba(255, 255, 255, .7));
+    border-right: 1px solid #c8c7cc;
+    background: linear-gradient(90deg,#fff 10%,rgba(255, 255, 255, .7));
     top: 0;
     left: 0;
     right: 0;
-    height: calc(50% - 1em); // 96
+    width: calc(50% - 1em); // 96
     cursor: pointer;
   }
   .middle {
-    top: calc(50% - 1em);
-    left: 0;
-    right: 0;
-    bottom: calc(50% - 1em);
+    top: 0;
+    left: calc(50% - 1em);
+    right: calc(50% - 1em);
+    bottom: 0;
   }
-  .bottom {
-    border-top: 1px solid #c8c7cc;
-    background: linear-gradient(0deg,#fff 10%,rgba(255, 255, 255, .7));
+  .right {
+    border-left: 1px solid #c8c7cc;
+    background: linear-gradient(270deg,#fff 10%,rgba(255, 255, 255, .7));
     bottom: 0;
     left: 0;
     right: 0;
-    height: calc(50% - 1em);
+    width: calc(50% - 1em);
     cursor: pointer;
   }   
 }
